@@ -17,7 +17,7 @@ y_min = -y_max
 #
 in_gear = gear_profile.Gear(42, module, 0.381010402575401, fig='a')      # 固定
 sun_gear = gear_profile.Gear(15, module, -0.307006017901236)             # 平歯車
-planet_gear = gear_profile.Gear(15, module, -0.307006017901236)             # 平歯車
+planet_gear = gear_profile.Gear(15, module, -0.307006017901236)          # 平歯車
 in_gear2 = gear_profile.Gear(45, module, -0.921018053703708, fig='a')    # 出力
 # 平歯車と平歯車の中心距離
 # 平歯車1の歯数、転位係数　z1 s1
@@ -43,7 +43,7 @@ def init_gear_pos(x, y, ang):
 
 
 circle = np.linspace(2*np.pi-0.03, 0.03, 100, endpoint=True)
-circle_max2 = in_gear2.get_hasaki_diameter() + 3.
+circle_max2 = in_gear2.get_hazoko_diameter() + 3.
 circle_cos2 = [np.nan]
 circle_sin2 = [np.nan]
 circle_cos2 = np.append(circle_cos2, [circle_max2-2.0])
@@ -53,7 +53,7 @@ circle_sin2 = np.append(circle_sin2, circle_max2*np.sin(circle))
 circle_cos2 = np.append(circle_cos2, [circle_max2-2.0])
 circle_sin2 = np.append(circle_sin2, [0.0])
 
-circle_max = in_gear.get_hasaki_diameter() + 4.0
+circle_max = in_gear.get_hazoko_diameter() + 4.0
 circle_cos = [np.nan]
 circle_sin = [np.nan]
 circle_cos = np.append(circle_cos, [circle_max-2.0])
@@ -72,40 +72,45 @@ circle_sin1 = np.append(circle_sin1, 0.4*np.sin(circle))
 # 歯車創成
 # 太陽ギア
 x0, y0 = sun_gear.generate_haguruma()
-hosei_ang = -sun_gear.a0 - sun_gear.a1/2
-x0, y0 = init_gear_pos(x0, y0, hosei_ang)
+# hosei_ang = -sun_gear.a0 - sun_gear.a1/2
+# x0, y0 = init_gear_pos(x0, y0, hosei_ang)
 x0 = np.append(x0, circle_cos1)
 y0 = np.append(y0, circle_sin1)
+x0 = np.append(x0, np.nan)
+y0 = np.append(y0, np.nan)
 # 遊星ギア
 x30, y30 = planet_gear.generate_haguruma()
 if planet_gear.hasuu0 % 2:
-    hosei_ang = -planet_gear.a0 - planet_gear.a1/2
+    hosei_ang = 0.0
 else:
-    hosei_ang = -planet_gear.a0 - planet_gear.a1/2 \
-        + 2*np.pi/planet_gear.hasuu0/2
+    hosei_ang = 2*np.pi/planet_gear.hasuu0/2
 x30, y30 = init_gear_pos(x30, y30, hosei_ang)
 x30 = np.append(x30, circle_cos1)
 y30 = np.append(y30, circle_sin1)
+x30 = np.append(x30, np.nan)
+y30 = np.append(y30, np.nan)
 # 内歯車　固定
 x1, y1 = in_gear.generate_haguruma()
 if planet_gear.hasuu0 % 2:
-    hosei_ang = -in_gear.a0 - in_gear.a1/2
+    hosei_ang = 0.0
 else:
-    hosei_ang = -in_gear.a0 - in_gear.a1/2 \
-        + 2*np.pi/in_gear.hasuu0/2
+    hosei_ang = 2*np.pi/in_gear.hasuu0/2
 x1, y1 = init_gear_pos(x1, y1, hosei_ang)
 x1 = np.append(x1, circle_cos)
 y1 = np.append(y1, circle_sin)
+x1 = np.append(x1, np.nan)
+y1 = np.append(y1, np.nan)
 # 内歯車　出力
 x2, y2 = in_gear2.generate_haguruma()
 if planet_gear.hasuu0 % 2:
-    hosei_ang = -in_gear2.a0 - in_gear2.a1/2
+    hosei_ang = 0.0
 else:
-    hosei_ang = -in_gear2.a0 - in_gear2.a1/2 \
-        + 2*np.pi/in_gear2.hasuu0/2
+    hosei_ang = 2*np.pi/in_gear2.hasuu0/2
 x2, y2 = init_gear_pos(x2, y2, hosei_ang)
 x2 = np.append(x2, circle_cos2)
 y2 = np.append(y2, circle_sin2)
+x2 = np.append(x2, np.nan)
+y2 = np.append(y2, np.nan)
 
 # fig, ax = plt.subplots(figsize=(6.4, 6.4), facecolor=(.18, .31, .31))
 # 初期表示
@@ -131,13 +136,6 @@ ax.plot(sun_carrier_distance*np.cos(circle),
         color='purple', linestyle='-.', linewidth=0.4, alpha=0.5)
 
 
-# line0, = ax.plot([], [], 'r')
-# line1, = ax.plot([], [], 'y')
-# line30, = ax.plot([], [], 'g')
-# line31, = ax.plot([], [], 'g')
-# line32, = ax.plot([], [], 'g')
-# line2, = ax.plot([], [], 'b')
-# ax.grid()
 # 各ギアのオブジェクト設定
 x0data = np.array([])  # '太陽ギア歯形x軸'
 y0data = np.array([])  # '太陽ギア歯形y軸'
@@ -277,9 +275,7 @@ def run(data):
     # 内歯車をパッチ
     xy1 = np.column_stack([x1data, y1data])
     patch1.set_xy(xy1)
-    # return line0, line1, line30, line31, line32, line2
-    # return patch0, line1, line30, line31, line32, line2
-    # return patch0, line1, patch30, patch31, patch32, line2
+
     return patch0, patch1, patch30, patch31, patch32, patch2
 
 

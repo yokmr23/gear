@@ -55,5 +55,5 @@ patch = mpatches.PathPatch(
 ax.add_patch(patch)
 plt.show()
 ```
-![](gear.png)
+![](img/gear.png)
          

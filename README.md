@@ -57,5 +57,5 @@ plt.show()
 ```
 ![](img/gear.png)
 # fushigi.py デモ
-<img src="img/fushigi.gif" width="200">
+![](img/fushigi.gif)
          

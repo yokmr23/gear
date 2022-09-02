@@ -56,4 +56,6 @@ ax.add_patch(patch)
 plt.show()
 ```
 ![](img/gear.png)
+# fushigi.py デモ
+<img src="img/fushigi.gif" width="200">
          

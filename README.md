@@ -1,10 +1,13 @@
 # gear
+
 - 歯車創成:　gear_profile.py
 - 使い方
 - 遊星ギア機構のデモ: planetary_gear.py
 - 不思議歯車機構のデモ: fushigi.py and fushigi_1.py
-# 歯車創成
-```
+
+## 歯車創成
+
+```python
 class Gear(hasuu, mo, shift, hasaki, hazoko, fig='hira')
   hasuu:歯車の歯数　(integer)
   shift:転移係数(float)
@@ -27,8 +30,10 @@ property:
     戻り値 list
       (軸間距離、歯車1諸元class Gearのパラメータ, 歯車2諸元class Gearのパラメータ)
 ```
-# 使い方
-```
+
+## 使い方
+
+```python
 import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 import numpy as np
@@ -55,7 +60,13 @@ patch = mpatches.PathPatch(
 ax.add_patch(patch)
 plt.show()
 ```
-![](img/gear.png)
-# fushigi.py デモ
-![](img/fushigi.gif)
-         
+
+![gear][ref0]
+
+[ref0]:img/gear.png
+
+![fusion][ref1]
+
+不思議歯車
+
+[ref1]:img/fushigi.gif

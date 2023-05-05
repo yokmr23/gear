@@ -1,12 +1,16 @@
 import numpy as np
+from typing import Self, Any
 
 # 圧力角設定
 alpha = 20.0 / 180.0 * np.pi
 # N1: 一つのインボリュート曲線部の点の数、N2:歯の頂点の点の数
-N1, N2 = 100, 10
+N1: int = 100
+N2: int = 10
 
 
-def make_param(m, z1, x1, fig1, z2, x2, fig2):
+def make_param(
+    m: float, z1: int, x1: float, fig1: str, z2: int, x2: float, fig2: str
+) -> Any:
     """
     モジュール、歯車1の歯数、歯車1の転移係数、歯車1の平、内、
     歯車2の歯数、歯車2の転移係数、歯車2の平、内、
@@ -36,7 +40,7 @@ def make_param(m, z1, x1, fig1, z2, x2, fig2):
 
     else:
         if not (fig1 == "hira"):
-            inv_n = 2 * np.tan(alpha) * ((x1 - x2) / (z1 - z2)) + inv(alpha)
+            inv_n = 2.0 * np.tan(alpha) * ((x1 - x2) / (z1 - z2)) + inv(alpha)
             alpha_w = get_alpha(inv_n)
             y = (z1 - z2) / 2 * (np.cos(alpha) / np.cos(alpha_w) - 1)
             distance = ((z1 - z2) / 2 + y) * m
@@ -79,16 +83,16 @@ def make_param(m, z1, x1, fig1, z2, x2, fig2):
     return [distance, gear1, gear2]
 
 
-def differential(x):
+def differential(x: float) -> float:
     return 1.0 / np.cos(x) / np.cos(x) - 1
 
 
-def function(x, c):
+def function(x: float, c: float) -> float:
     return np.tan(x) - x - c
 
 
 # inv関数
-def inv(a):
+def inv(a: float) -> float:
     """
     インボリュート関数
     パラメータ　a:float
@@ -100,7 +104,7 @@ def inv(a):
 # θ=tan(a)-a θからaを求める
 #
 #
-def get_alpha(y):
+def get_alpha(y: float) -> float:
     """
     インボリュート逆関数
     パラメータ　角度 y : float
@@ -116,7 +120,7 @@ def get_alpha(y):
     return x1
 
 
-def get_distance1(z1, z2, m1, s1, s2):
+def get_distance1(z1: int, z2: int, m1: float, s1: float, s2: float) -> float:
     """
     # 平歯車と平歯車の中心間距離を求める
     Palameters
@@ -138,7 +142,7 @@ def get_distance1(z1, z2, m1, s1, s2):
     return ((z1 + z2) / 2 + y) * m1
 
 
-def rotate_gear(x, y, ang):
+def rotate_gear(x: Any, y: Any, ang: float) -> tuple:
     """
     ギアオブジェクトを回転させる
 
@@ -158,7 +162,15 @@ def rotate_gear(x, y, ang):
 
 
 class Gear:
-    def __init__(self, hasuu, mo, shift, hasaki, hazoko, fig="hira"):
+    def __init__(
+        self,
+        hasuu: int,
+        mo: float,
+        shift: float,
+        hasaki: float,
+        hazoko: float,
+        fig="hira",
+    ) -> None:
         """
         hasuu: int
         mo: float
@@ -184,26 +196,26 @@ class Gear:
         self.code = np.array([])
         self.generate_haguruma()
 
-    def get_width_teeth_arc(self):
+    def get_width_teeth_arc(self: Self) -> float:
         """
         歯幅の基準円の円弧の長さ
         """
         return self.mo0 * np.pi + 4 * self.mo0 * self.shift
 
-    def get_width_teeth_ang(self):
+    def get_width_teeth_ang(self: Self) -> float:
         """
         歯幅の基準円の円弧角度
         """
         return self.get_width_teeth_arc() / self.hasuu0 / self.mo0 * 2
 
-    def get_width_kijunen_kisoen(self):
+    def get_width_kijunen_kisoen(self: Self) -> float:
         """
         基準円とインボリュート曲線の交点と基礎円とインボリュート曲線との交点
         二つの交点と中心からのなす角度
         """
         return np.tan(np.arccos(self.d0 / self.da)) - np.arccos(self.d0 / self.da)
 
-    def get_width_hasaki_ang(self):
+    def get_width_hasaki_ang(self: Self) -> float:
         ang = (
             np.tan(np.arccos(self.d0 / self.hasaki))
             - np.arccos(self.d0 / self.hasaki)
@@ -211,38 +223,38 @@ class Gear:
         )
         return self.get_width_teeth_ang() / 4 - ang
 
-    def get_width_hazoko_ang(self):
-        """
-        歯底幅角度
-        """
-        ang0 = self.get_width_kijunen_kisoen()
-        if self.hazoko > self.d0:
-            # 歯底径>基礎円径
-            ang = np.arccos(self.d0 / self.hazoko)
-            ang = np.tan(ang) - ang
-            ang0 -= ang
-        return self.get_width_hazoko() / 2.0 - ang0
+    # def get_width_hazoko_ang(self: Self) -> float:
+    #    """
+    #    歯底幅角度
+    #    """
+    #    ang0 = self.get_width_kijunen_kisoen()
+    #    if self.hazoko > self.d0:
+    #        # 歯底径>基礎円径
+    #        ang = np.arccos(self.d0 / self.hazoko)
+    #        ang = np.tan(ang) - ang
+    #        ang0 -= ang
+    #    return self.get_width_hazoko() / 2.0 - ang0
 
-    def hazoko_center_kijun(self):
+    def hazoko_center_kijun(self: Self) -> float:
         """
         歯底中央点と基準線とインボリュートの交点のなす角度
         """
         return np.pi / self.hasuu0 / 2 - 2 * self.shift / self.hasuu0 * np.tan(alpha)
 
-    def hasaki_cente_kijun(self):
+    def hasaki_cente_kijun(self: Self) -> float:
         """
         歯先中央点と基準線とインボリュートの交点のなす角度
         """
         return np.pi / self.hasuu0 / 2 + 2 * self.shift / self.hasuu0 * np.tan(alpha)
 
-    def hasaki_edge_kijun(self):
+    def hasaki_edge_kijun(self: Self) -> float:
         """
         歯先エッジと基準線とインボリュートの交点のなす角度
         """
         a = np.tan(np.arccos(self.d0 / self.hasaki)) - np.arccos(self.d0 / self.hasaki)
         return a - self.get_width_kijunen_kisoen()
 
-    def hasaki_edge_center(self):
+    def hasaki_edge_center(self: Self) -> list:
         """
         歯先始まり位置角度、歯先終わり位置の角度、なす角度
         """
@@ -256,7 +268,7 @@ class Gear:
         start_a = end_a - a
         return [start_a, end_a, end_a - start_a]
 
-    def kijun_hazoko_edge(self):
+    def kijun_hazoko_edge(self: Self) -> float:
         """
         インボリュート曲線と基準円との交点と中心を結ぶ直線と
         インボリュート直線と歯底との交点と中心を結ぶ直線がなす角度を求める
@@ -268,7 +280,7 @@ class Gear:
             )
         return a0
 
-    def hazoko_edge_center(self):
+    def hazoko_edge_center(self: Self) -> list:
         """
         歯底エッジと歯底中央
         戻り値　歯底始まり角度、歯底終わり角度、歯底中央とエッジ部角度
@@ -277,11 +289,11 @@ class Gear:
         a = self.hazoko_center_kijun() - self.kijun_hazoko_edge()
         return [-a, 0, a]
 
-    def get_func1(self, a):
+    def get_func1(self: Self, a: float) -> float:
         ang = np.arccos(a)
         return np.tan(ang) - ang
 
-    def gear_hazoko_part(self):
+    def gear_hazoko_part(self: Self) -> Any:
         """
         歯底部作成
         極座標で表現(radius,theata)
@@ -297,7 +309,7 @@ class Gear:
             code = np.array([1, 2, 2, 2])
         return [radius, theta, code]
 
-    def involute_curve(self):
+    def involute_curve(self: Self) -> Any:
         """
         片側インボリュート作成
         """
@@ -314,7 +326,7 @@ class Gear:
         code = np.full(N1, 2)
         return [radius, theta, code]
 
-    def gear_hasaki_part(self):
+    def gear_hasaki_part(self: Self) -> Any:
         """
         片側歯先部作成
         """
@@ -325,7 +337,7 @@ class Gear:
         code = np.full(N2, 2)
         return [radius[1:], theta[1:], code[1:]]
 
-    def gear_half(self):
+    def gear_half(self: Self) -> Any:
         """
         一枚の歯車を作成
         戻り値:x座標、y座標、コード
@@ -341,7 +353,7 @@ class Gear:
 
         return [radius, theta, code]
 
-    def add_pointA(self):
+    def add_pointA(self: Self) -> Any:
         radius, theta, code = self.gear_half()
         # 葉の山の中心がx軸上に配置されるように回転する
         theta -= np.pi / self.hasuu0 - self.hazoko_edge_center()[2]
@@ -355,7 +367,7 @@ class Gear:
         code = np.concatenate((code, code_symmetry[1:-1]))
         return radius, theta, code
 
-    def generate_haguruma(self):
+    def generate_haguruma(self: Self) -> None:
         radius, theta, code = self.add_pointA()
         self.x = np.array([])
         self.y = np.array([])
@@ -372,7 +384,7 @@ class Gear:
         # self.code1[-1] = 79
 
 
-def test():
+def test() -> None:
     for i in range(10):
         y = (i + 1) * 0.01
         x = get_alpha(y)

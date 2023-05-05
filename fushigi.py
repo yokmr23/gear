@@ -10,32 +10,33 @@ from matplotlib.widgets import Slider
 from matplotlib.path import Path
 
 import gear_profile as gear
+from typing import Any
 
 # 平歯車と平歯車
-m = 0.14
-z1 = 16
-x1 = 0.408
-z2 = 28
-x2 = 0.32
+m: float = 0.14
+z1: int = 16
+x1: float = 0.408
+z2: int = 28
+x2: float = 0.32
 
 
 # 内歯車
-z3 = 71
-x3 = 1.682
-z4 = 74
-x4 = 0.0
+z3: int = 71
+x3: float = 1.682
+z4: int = 74
+x4: float = 0.0
 
 # ang_v = 4 * np.pi / 200   # アニメーション進行速度
-ang_v = np.pi / 360.0
-v_max = 10.0
-alpha = 20.0 / 180.0 * np.pi  # 圧力角
-x_max = 6.5
-x_min = -x_max
-y_max = x_max
-y_min = -y_max
+ang_v: float = np.pi / 360.0
+v_max: float = 10.0
+alpha: float = 20.0 / 180.0 * np.pi  # 圧力角
+x_max: float = 6.5
+x_min: float = -x_max
+y_max: float = x_max
+y_min: float = -y_max
 # sun gear and plamet gear
 b = gear.make_param(m, z1, x1, "hira", z2, x2, "hira")
-sun_carrier_distance = b[0]
+sun_carrier_distance: float = b[0]
 sun_gear = gear.Gear(**b[1])
 planet_gear = gear.Gear(**b[2])
 # planet gear and inner gear
@@ -51,17 +52,17 @@ print(
 )
 
 
-def inner_fig(hazoko_r):
+def inner_fig(hazoko_r: float) -> Any:
     circle = np.linspace(2 * np.pi - 0.03, 0.03, 100, endpoint=True)
     circle_max2 = hazoko_r * 1.15
-    circle_cos2 = [np.nan]
-    circle_sin2 = [np.nan]
-    circle_cos2 = np.concatenate((circle_cos2, [circle_max2 * 0.95]))
-    circle_sin2 = np.concatenate((circle_sin2, [0.0]))
+    circle_cos2 = np.array([np.nan, circle_max2 * 0.95])
+    circle_sin2 = np.array([np.nan, 0.0])
+    # circle_cos2 = np.append(circle_cos2, circle_max2 * 0.95)
+    # circle_sin2 = np.concatenate((circle_sin2, [0.0]))
     circle_cos2 = np.concatenate((circle_cos2, circle_max2 * np.cos(circle)))
     circle_sin2 = np.concatenate((circle_sin2, circle_max2 * np.sin(circle)))
-    circle_cos2 = np.concatenate((circle_cos2, [circle_max2 * 0.95]))
-    circle_sin2 = np.concatenate((circle_sin2, [0.0]))
+    circle_cos2 = np.concatenate((circle_cos2, np.array([circle_max2 * 0.95])))
+    circle_sin2 = np.concatenate((circle_sin2, np.array([0.0])))
     circle_x = np.append(circle_cos2, np.nan)
     circle_y = np.append(circle_sin2, np.nan)
     return circle_x, circle_y
@@ -80,21 +81,22 @@ else:
     x30, y30 = gear.rotate_gear(x30, y30, hosei_ang)
     ho_flag = True
 # 内歯車　固定
-x1, y1 = in_gear.x, in_gear.y
+x11 = in_gear.x
+y11 = in_gear.y
 if ho_flag:
     hosei_ang = 2 * np.pi / in_gear.hasuu0 / 2
-    x1, y1 = gear.rotate_gear(x1, y1, hosei_ang)
+    x11, y11 = gear.rotate_gear(x11, y11, hosei_ang)
 xx, yy = inner_fig(in_gear2.hazoko / 2.0)
-x1 = np.concatenate((x1, xx))
-y1 = np.concatenate((y1, yy))
+x11 = np.concatenate((x11, xx))
+y11 = np.concatenate((y11, yy))
 # 内歯車　出力
-x2, y2 = in_gear2.x, in_gear2.y
+x22, y22 = in_gear2.x, in_gear2.y
 if ho_flag:
     hosei_ang = 2 * np.pi / in_gear2.hasuu0 / 2
-    x2, y2 = gear.rotate_gear(x2, y2, hosei_ang)
+    x22, y22 = gear.rotate_gear(x22, y22, hosei_ang)
 xx, yy = inner_fig(in_gear2.hazoko / 2.0)
-x2 = np.concatenate((x2, xx))
-y2 = np.concatenate((y2, yy))
+x22 = np.concatenate((x22, xx))
+y22 = np.concatenate((y22, yy))
 
 # fig, ax = plt.subplots(figsize=(6.4, 6.4), facecolor=(.18, .31, .31))
 # 初期表示
@@ -175,14 +177,14 @@ ax.add_patch(patch32)
 carrier = [patch30, patch31, patch32]
 
 # inner gears　固定
-xy1 = np.column_stack((x1, y1))
+xy1 = np.column_stack((x11, y11))
 patch1 = patches.Polygon(
     xy1, facecolor="orange", edgecolor="r", alpha=0.8, transform=ax.transData
 )
 ax.add_patch(patch1)
 
 # inner gears 2 出力
-xy2 = np.column_stack((x2, y2))
+xy2 = np.column_stack((x22, y22))
 patch2 = patches.Polygon(
     xy2, facecolor="green", edgecolor="m", alpha=0.8, transform=ax.transData
 )
@@ -199,7 +201,7 @@ sp_slider = Slider(
 ang_v1 = ang_v
 
 
-def update(val):
+def update(val: Any) -> None:
     global ang_v1
     ang_v1 = ang_v * val
 
@@ -207,7 +209,7 @@ def update(val):
 sp_slider.on_changed(update)
 
 
-def data_gen():
+def data_gen() -> Any:
     for cnt in itertools.count():
         if cnt > 1000:
             break
@@ -237,7 +239,7 @@ def data_gen():
         yield ang_sun, ang_carrier, ang_planet, ang_inner, ang_inner_out
 
 
-def init():
+def init() -> Any:
     # print('Init')
     # ax.set_aspect('equal')
     ax.set_ylim(y_min, y_max)
@@ -255,7 +257,7 @@ def init():
     )
 
 
-def run(data):
+def run(data: Any) -> Any:
     # v_sun 太陽ギア積算角度
     # v_car キャリア積算角度
     # v_planet キャリアギアの積算角度

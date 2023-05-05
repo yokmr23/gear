@@ -12,11 +12,11 @@ from matplotlib.widgets import RadioButtons
 import gear_profile as gear
 
 # 平歯車と平歯車
-m = 1
-z1 = 15
-x1 = 0.0
-z2 = 18
-x2 = 0.0
+m: float = 1
+z1: int = 15
+x1: float = 0.0
+z2: int = 18
+x2: float = 0.0
 
 
 # 内歯車
@@ -50,17 +50,17 @@ print(
 # inner gear 外側
 
 
-def inner_fig(hazoko_r):
+def inner_fig(hazoko_r: float):
     circle = np.linspace(2 * np.pi - 0.03, 0.03, 100, endpoint=True)
     circle_max2 = hazoko_r * 1.15
-    circle_cos2 = [np.nan]
-    circle_sin2 = [np.nan]
-    circle_cos2 = np.concatenate((circle_cos2, [circle_max2 * 0.95]))
-    circle_sin2 = np.concatenate((circle_sin2, [0.0]))
+    circle_cos2 = np.array([np.nan, circle_max2 * 0.95])
+    circle_sin2 = np.array([np.nan, 0.0])
+    # circle_cos2 = np.concatenate((circle_cos2, [circle_max2 * 0.95]))
+    # circle_sin2 = np.concatenate((circle_sin2, [0.0]))
     circle_cos2 = np.concatenate((circle_cos2, circle_max2 * np.cos(circle)))
     circle_sin2 = np.concatenate((circle_sin2, circle_max2 * np.sin(circle)))
-    circle_cos2 = np.concatenate((circle_cos2, [circle_max2 * 0.95]))
-    circle_sin2 = np.concatenate((circle_sin2, [0.0]))
+    circle_cos2 = np.append(circle_cos2, circle_max2 * 0.95)
+    circle_sin2 = np.append(circle_sin2, 0.0)
     circle_x = np.append(circle_cos2, np.nan)
     circle_y = np.append(circle_sin2, np.nan)
     return circle_x, circle_y
@@ -79,15 +79,14 @@ else:
     x30, y30 = gear.rotate_gear(x30, y30, hosei_ang)
     ho_flag = True
 # 内歯車　出力
-# x2, y2 = in_gear2.generate_haguruma()
-x2, y2 = in_gear2.x, in_gear2.y
+x22, y22 = in_gear2.x, in_gear2.y
 # 歯車噛み合い位相合わせ
 if ho_flag:
     hosei_ang = 2 * np.pi / in_gear2.hasuu0 / 2
-    x2, y2 = gear.rotate_gear(x2, y2, hosei_ang)
+    x22, y22 = gear.rotate_gear(x22, y22, hosei_ang)
 xx, yy = inner_fig(in_gear2.hazoko / 2.0)
-x2 = np.concatenate((x2, xx))
-y2 = np.concatenate((y2, yy))
+x22 = np.concatenate((x22, xx))
+y22 = np.concatenate((y22, yy))
 
 # 初期表示
 fig = plt.figure(figsize=(6.4, 6.4), facecolor=(0.5, 0.5, 0.6))
@@ -116,7 +115,7 @@ patch32 = copy.copy(patch30)
 ax.add_patch(patch32)
 carrier = [patch30, patch31, patch32]
 # inner gears をpatch
-xy2 = np.column_stack((x2, y2))
+xy2 = np.column_stack((x22, y22))
 # patch2 = Polygon(xy2, facecolor='green', edgecolor='m', alpha=0.8)
 patch2 = mpatches.PathPatch(
     Path(xy2), facecolor="green", edgecolor="b", lw=0.4, alpha=0.8

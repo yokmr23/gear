@@ -101,7 +101,7 @@ y22 = np.concatenate((y22, yy))
 # fig, ax = plt.subplots(figsize=(6.4, 6.4), facecolor=(.18, .31, .31))
 # 初期表示
 fig = plt.figure(figsize=(6.4, 6.4), facecolor=(0.50, 0.50, 0.50))
-ax = fig.add_axes([0.05, 0.05, 0.9, 0.9])
+ax = fig.add_axes((0.05, 0.05, 0.9, 0.9))
 ax.set_title("Magical Planetary Gears (不思議歯車機構)", color="0.8")
 ax.set_facecolor("#8addd5")
 ax.set_ylim(y_min, y_max)
@@ -190,7 +190,7 @@ patch2 = patches.Polygon(
 )
 ax.add_patch(patch2)
 
-axsp = plt.axes([0.25, 0.06, 0.6, 0.03])
+axsp = plt.axes((0.25, 0.06, 0.6, 0.03))
 sp_slider = Slider(
     ax=axsp,
     label="Sun gear 角速度比",
@@ -277,7 +277,8 @@ def run(data: Any) -> Any:
         ang1 = v_planet + 2 * np.pi / 3 * i
         v_car1 = v_car + 2 * np.pi / 3 * i
         tr = (
-            Affine2D().rotate(ang1).translate(sun_carrier_distance, 0).rotate(v_car1)
+            Affine2D().rotate(ang1).translate(sun_carrier_distance, 0).
+            rotate(v_car1)
             + ax.transData
         )
         carrier[i].set(transform=tr)

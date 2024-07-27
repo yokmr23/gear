@@ -213,7 +213,8 @@ class Gear:
         基準円とインボリュート曲線の交点と基礎円とインボリュート曲線との交点
         二つの交点と中心からのなす角度
         """
-        return np.tan(np.arccos(self.d0 / self.da)) - np.arccos(self.d0 / self.da)
+        return np.tan(np.arccos(self.d0 / self.da)) -\
+            np.arccos(self.d0 / self.da)
 
     def get_width_hasaki_ang(self) -> float:
         ang = (
@@ -239,19 +240,22 @@ class Gear:
         """
         歯底中央点と基準線とインボリュートの交点のなす角度
         """
-        return np.pi / self.hasuu0 / 2 - 2 * self.shift / self.hasuu0 * np.tan(alpha)
+        return np.pi / self.hasuu0 / 2 - \
+            2 * self.shift / self.hasuu0 * np.tan(alpha)
 
     def hasaki_cente_kijun(self) -> float:
         """
         歯先中央点と基準線とインボリュートの交点のなす角度
         """
-        return np.pi / self.hasuu0 / 2 + 2 * self.shift / self.hasuu0 * np.tan(alpha)
+        return np.pi / self.hasuu0 / 2 +\
+            2 * self.shift / self.hasuu0 * np.tan(alpha)
 
     def hasaki_edge_kijun(self) -> float:
         """
         歯先エッジと基準線とインボリュートの交点のなす角度
         """
-        a = np.tan(np.arccos(self.d0 / self.hasaki)) - np.arccos(self.d0 / self.hasaki)
+        a = np.tan(np.arccos(self.d0 / self.hasaki)) -\
+            np.arccos(self.d0 / self.hasaki)
         return a - self.get_width_kijunen_kisoen()
 
     def hasaki_edge_center(self) -> list:
@@ -305,7 +309,10 @@ class Gear:
             code = np.array([1, 3])
         else:
             radius = np.full(4, self.hazoko / 2.0)
-            theta = np.linspace(hazoko_ang[0], hazoko_ang[1], 4, endpoint=False)
+            theta = np.linspace(hazoko_ang[0],
+                                hazoko_ang[1],
+                                4,
+                                endpoint=False)
             code = np.array([1, 2, 2, 2])
         return [radius, theta, code]
 
@@ -345,7 +352,9 @@ class Gear:
         radius = np.array([])
         theta = np.array([])
         code = np.array([])
-        b = [self.gear_hazoko_part(), self.involute_curve(), self.gear_hasaki_part()]
+        b = [self.gear_hazoko_part(),
+             self.involute_curve(),
+             self.gear_hasaki_part()]
         for i in b:
             radius = np.concatenate((radius, i[0]))
             theta = np.concatenate((theta, i[1]))

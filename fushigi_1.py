@@ -112,7 +112,7 @@ y22 = np.concatenate((y22, yy))
 # fig, ax = plt.subplots(figsize=(6.4, 6.4), facecolor=(.18, .31, .31))
 # 初期表示
 fig = plt.figure(figsize=(6.4, 6.4), facecolor=(0.50, 0.50, 0.50))
-ax = fig.add_axes([0.05, 0.05, 0.9, 0.9])
+ax = fig.add_axes((0.05, 0.05, 0.9, 0.9))
 ax.set_title("Magical Planetary Gears (不思議歯車機構)", color="0.8")
 ax.set_facecolor("#8addd5")
 ax.set_ylim(y_min, y_max)
@@ -196,7 +196,7 @@ patch2 = patches.Polygon(
 )
 ax.add_patch(patch2)
 
-axsp = plt.axes([0.25, 0.06, 0.6, 0.03])
+axsp = plt.axes((0.25, 0.06, 0.6, 0.03))
 sp_slider = Slider(
     ax=axsp,
     label="Sun gear 角速度比",
@@ -239,7 +239,8 @@ def run(data):
         ang1 = v_planet + 2 * np.pi / 3 * i
         v_car1 = v_car + 2 * np.pi / 3 * i
         tr = (
-            Affine2D().rotate(ang1).translate(sun_carrier_distance, 0).rotate(v_car1)
+            Affine2D().rotate(ang1).translate(sun_carrier_distance, 0).
+            rotate(v_car1)
             + ax.transData
         )
         carrier[i].set(transform=tr)
@@ -271,7 +272,8 @@ def callback1(event):
         / (1 + sun_gear.hasuu0 / in_gear.hasuu0)
     )
     ang_inner_out = ang_sun / (
-        (1 + in_gear.hasuu0 / sun_gear.hasuu0) / (1 - in_gear.hasuu0 / in_gear2.hasuu0)
+        (1 + in_gear.hasuu0 / sun_gear.hasuu0) /
+        (1 - in_gear.hasuu0 / in_gear2.hasuu0)
     )
     ang_inner = 0
     run([ang_sun, ang_carrier, ang_planet, ang_inner, ang_inner_out])
@@ -295,7 +297,8 @@ def callback2(event):
         / (1 + sun_gear.hasuu0 / in_gear.hasuu0)
     )
     ang_inner_out = ang_sun / (
-        (1 + in_gear.hasuu0 / sun_gear.hasuu0) / (1 - in_gear.hasuu0 / in_gear2.hasuu0)
+        (1 + in_gear.hasuu0 / sun_gear.hasuu0) /
+        (1 - in_gear.hasuu0 / in_gear2.hasuu0)
     )
     ang_inner = 0
     run([ang_sun, ang_carrier, ang_planet, ang_inner, ang_inner_out])
@@ -321,15 +324,15 @@ def callback0(event):
 
 draw0([ang_sun, ang_carrier, ang_planet, ang_inner, ang_inner_out])
 
-axsb1 = plt.axes([0.80, 0.1, 0.08, 0.03])
+axsb1 = plt.axes((0.80, 0.1, 0.08, 0.03))
 button1 = Button(axsb1, "反時計", hovercolor="y")
 button1.on_clicked(callback1)
 
-axsb2 = plt.axes([0.12, 0.1, 0.08, 0.03])
+axsb2 = plt.axes((0.12, 0.1, 0.08, 0.03))
 button2 = Button(axsb2, "時計方向", hovercolor="y")
 button2.on_clicked(callback2)
 
-axsb0 = plt.axes([0.80, 0.15, 0.08, 0.03])
+axsb0 = plt.axes((0.80, 0.15, 0.08, 0.03))
 button0 = Button(axsb0, "Reset", hovercolor="y")
 button0.on_clicked(callback0)
 

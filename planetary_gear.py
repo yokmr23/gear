@@ -90,7 +90,7 @@ y22 = np.concatenate((y22, yy))
 
 # 初期表示
 fig = plt.figure(figsize=(6.4, 6.4), facecolor=(0.5, 0.5, 0.6))
-ax = fig.add_axes([0.05, 0.05, 0.9, 0.9])
+ax = fig.add_axes((0.05, 0.05, 0.9, 0.9))
 # fig, ax = plt.subplots()
 # ax.set_aspect('equal')
 # 各ギアのオブジェクト設定
@@ -99,14 +99,22 @@ ax = fig.add_axes([0.05, 0.05, 0.9, 0.9])
 xy0 = np.column_stack((x0, y0))
 # patch0 = Polygon(xy0, facecolor='tomato', edgecolor='b', alpha=0.8)
 patch0 = mpatches.PathPatch(
-    Path(xy0, sun_gear.code), facecolor="tomato", edgecolor="b", lw=0.4, alpha=0.8
+    Path(xy0, sun_gear.code),
+    facecolor="tomato",
+    edgecolor="b",
+    lw=0.4,
+    alpha=0.8
 )
 ax.add_patch(patch0)
 # carrier gearsをpatch
 xy30 = np.column_stack((x30, y30))
 # patch30 = Polygon(xy30, facecolor='aqua', edgecolor='b', alpha=0.8)
 patch30 = mpatches.PathPatch(
-    Path(xy30, planet_gear.code), facecolor="aqua", edgecolor="b", lw=0.4, alpha=0.8
+    Path(xy30, planet_gear.code),
+    facecolor="aqua",
+    edgecolor="b",
+    lw=0.4,
+    alpha=0.8
 )
 ax.add_patch(patch30)
 patch31 = copy.copy(patch30)
@@ -172,7 +180,7 @@ def gearfunc(label):
         tx.set(text=str0[2])
 
 
-rax = plt.axes([0.05, 0.05, 0.15, 0.15])
+rax = plt.axes((0.05, 0.05, 0.15, 0.15))
 radio = RadioButtons(rax, ("Sun", "Carrier", "Inner"))
 radio.on_clicked(gearfunc)
 
@@ -191,7 +199,10 @@ def data_gen():
                 ang_sun -= ang_v * sp_sun
                 ang_carrier += ang_v * sp_car
                 ang_planet += (
-                    ang_v * abs(sp_car - sp_sun) * sun_gear.hasuu0 / planet_gear.hasuu0
+                    ang_v *
+                    abs(sp_car - sp_sun) *
+                    sun_gear.hasuu0 /
+                    planet_gear.hasuu0
                 )
                 ang_inner += (
                     ang_v * sp_car * (sun_gear.hasuu0 / in_gear2.hasuu0 + 1)
@@ -199,7 +210,8 @@ def data_gen():
                 )
             else:
                 ang_carrier += ang_v * sp_car
-                ang_planet -= ang_v * sp_car * in_gear2.hasuu0 / planet_gear.hasuu0
+                ang_planet -= ang_v * sp_car * in_gear2.hasuu0 /\
+                    planet_gear.hasuu0
                 ang_sun += (
                     ang_v
                     * sp_car
@@ -243,7 +255,10 @@ def run(data):
         ang1 = v_planet + 2 * np.pi / 3 * i
         v_car1 = v_car + 2 * np.pi / 3 * i
         tr = (
-            Affine2D().rotate(ang1).translate(sun_carrier_distance, 0).rotate(v_car1)
+            Affine2D().
+            rotate(ang1).
+            translate(sun_carrier_distance, 0).
+            rotate(v_car1)
             + ax.transData
         )
         carrier[i].set(transform=tr)
